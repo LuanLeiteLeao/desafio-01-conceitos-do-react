@@ -52,7 +52,7 @@ $ cd desafio-01-conceitos-do-react
 # Instale as dependências
 $ npm install
 
-# Inicar o servidor de desenvolviemnjtop 
+# Inicar o servidor de desenvolvimento 
 $ npm run dev
 ```
 
