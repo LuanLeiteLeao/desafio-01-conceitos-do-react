@@ -3,117 +3,126 @@ import { useState } from "react";
 import "../styles/tasklist.scss";
 
 import { FiTrash, FiCheckSquare } from "react-icons/fi";
+import React from "react";
+import { TaskInterface } from "./TaskInterface";
 
-interface Task {
-  id: number;
-  title: string;
-  isComplete: boolean;
+interface IProps {}
+
+interface IState {
+  tasks: TaskInterface[];
+  newTaskTitle: string;
 }
 
-export function TaskList() {
-  const [tasks, setTasks] = useState<Task[]>([]);
-  const [newTaskTitle, setNewTaskTitle] = useState("");
+export class TaskList extends React.Component<IProps,IState> {
+  constructor(props: any) {
+    super(props);
+    this.state = {tasks:[],newTaskTitle:""};
+  }
 
-  function getRandomInt() {
+  getRandomInt() {
     const max_number = 100000000;
     return Math.floor(Math.random() * max_number);
   }
 
-  function clearNewTaskTitle() {
-    setNewTaskTitle("");
+  clearNewTaskTitle() {
+    this.setState({ newTaskTitle: "" });
   }
 
-  function handleCreateNewTask() {
+  handleCreateNewTask() {
     // Crie uma nova task com um id random, não permita criar caso o título seja vazio.
-    console.log(newTaskTitle)
-    if(newTaskTitle !== ""){
-      const newTask = {
-        id: getRandomInt(),
-        title: newTaskTitle,
+    
+    if (this.state.newTaskTitle !== "") {
+      const newTask ={
+        id: this.getRandomInt(),
+        title: this.state.newTaskTitle,
         isComplete: false,
       };
-  
-      setTasks((oldArray) => [...tasks, newTask]);
-  
-      clearNewTaskTitle();
+
+      const concatena = [...this.state.tasks, newTask]
+      
+      this.setState({ tasks:concatena });
+      
+
+      this.clearNewTaskTitle();
     }
-    
   }
 
-  function handleToggleTaskCompletion(id: number) {
+  handleToggleTaskCompletion(id: number) {
     // Altere entre `true` ou `false` o campo `isComplete` de uma task com dado ID
-    const updateTasks = tasks.map((task) => {
+    const updateTasks = this.state.tasks.map((task) => {
       if (task.id == id) {
-        task.isComplete = !task.isComplete?true:false;
+        task.isComplete = !task.isComplete ? true : false;
       }
       return task;
     });
 
-    setTasks(updateTasks);
+    this.setState({ tasks:updateTasks });
   }
 
-  function handleRemoveTask(id: number) {
+  handleRemoveTask(id: number) {
     // Remova uma task da listagem pelo ID
-    const updateTasks = tasks.filter((task) => {
+    const updateTasks = this.state.tasks.filter((task) => {
       return task.id !== id;
     });
 
-    setTasks(updateTasks);
+    this.setState({tasks:updateTasks});
   }
 
-  return (
-    <section className="task-list container">
-      <header>
-        <h2>Minhas tasks</h2>
+  render() {
+    return (
+      <section className="task-list container">
+        <header>
+          <h2>Minhas tasks</h2>
 
-        <div className="input-group">
-          <input
-            type="text"
-            placeholder="Adicionar novo todo"
-            onChange={(e) => setNewTaskTitle(e.target.value)}
-            value={newTaskTitle}
-          />
-          <button
-            type="submit"
-            data-testid="add-task-button"
-            onClick={handleCreateNewTask}
-          >
-            <FiCheckSquare size={16} color="#fff" />
-          </button>
-        </div>
-      </header>
+          <div className="input-group">
+            <input
+              type="text"
+              placeholder="Adicionar novo todo"
+              onChange={(e) => this.setState({newTaskTitle:e.target.value})}
+              value={this.state.newTaskTitle}
+            />
+            <button
+              type="submit"
+              data-testid="add-task-button"
+              onClick={()=>this.handleCreateNewTask()}
+            >
+              <FiCheckSquare size={16} color="#fff" />
+            </button>
+          </div>
+        </header>
 
-      <main>
-        <ul>
-          {tasks.map((task) => (
-            <li key={task.id}>
-              <div
-                className={task.isComplete ? "completed" : ""}
-                data-testid="task"
-              >
-                <label className="checkbox-container">
-                  <input
-                    type="checkbox"
-                    readOnly
-                    checked={task.isComplete}
-                    onClick={() => handleToggleTaskCompletion(task.id)}
-                  />
-                  <span className="checkmark"></span>
-                </label>
-                <p>{task.title}</p>
-              </div>
+        <main>
+          <ul>
+            {this.state.tasks.map((task) => (
+              <li key={task.id}>
+                <div
+                  className={task.isComplete ? "completed" : ""}
+                  data-testid="task"
+                >
+                  <label className="checkbox-container">
+                    <input
+                      type="checkbox"
+                      readOnly
+                      checked={task.isComplete}
+                      onClick={() => this.handleToggleTaskCompletion(task.id)}
+                    />
+                    <span className="checkmark"></span>
+                  </label>
+                  <p>{task.title}</p>
+                </div>
 
-              <button
-                type="button"
-                data-testid="remove-task-button"
-                onClick={() => handleRemoveTask(task.id)}
-              >
-                <FiTrash size={16} />
-              </button>
-            </li>
-          ))}
-        </ul>
-      </main>
-    </section>
-  );
+                <button
+                  type="button"
+                  data-testid="remove-task-button"
+                  onClick={() => this.handleRemoveTask(task.id)}
+                >
+                  <FiTrash size={16} />
+                </button>
+              </li>
+            ))}
+          </ul>
+        </main>
+      </section>
+    );
+  }
 }
