@@ -24,11 +24,11 @@
 
 ### Features
 
-- [x] Inserir Atividades 
-- [x] Apresentar  atividades
-- [x] Concluir atividades
-- [x] Deletar Atividades
-- [ ] Editar Atividades
+- [x] Inserir Tarefa
+- [x] Apresentar  Ttividades
+- [x] Marcar e desmarcar Tarefa como concluída
+- [x] Deletar Ttividades
+- [ ] Editar Ttividades
 
 
 
