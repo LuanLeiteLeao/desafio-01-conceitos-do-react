@@ -37,12 +37,8 @@ export class TaskList extends React.Component<IProps,IState> {
         title: this.state.newTaskTitle,
         isComplete: false,
       };
-
-      const concatena = [...this.state.tasks, newTask]
       
-      this.setState({ tasks:concatena });
-      
-
+      this.setState({ tasks:[...this.state.tasks, newTask] });
       this.clearNewTaskTitle();
     }
   }
@@ -61,10 +57,7 @@ export class TaskList extends React.Component<IProps,IState> {
 
   handleRemoveTask(id: number) {
     // Remova uma task da listagem pelo ID
-    const updateTasks = this.state.tasks.filter((task) => {
-      return task.id !== id;
-    });
-
+    const updateTasks = this.state.tasks.filter(task => task.id !== id);
     this.setState({tasks:updateTasks});
   }
 
